@@ -4,8 +4,8 @@ export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(
-    localStorage.getItem("currentUserEmail")
-      ? { email: localStorage.getItem("currentUserEmail") }
+    localStorage.getItem("currentUser")
+      ? { email: localStorage.getItem("currentUser") }
       : null
   );
     
