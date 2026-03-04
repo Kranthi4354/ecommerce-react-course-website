@@ -1,30 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Routes, Route} from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import Auth from './pages/Auth.jsx'
-import Checkout from './pages/Checkout.jsx'
-import Navbar from './components/Navbar.jsx'
-import AuthProvider from './context/AuthContext.jsx'
-import ProductDetails from './pages/ProductDetails.jsx'
+  import { Routes, Route } from "react-router-dom";
+  import Home from "./pages/Home";
+  import Auth from "./pages/Auth";
+  import Checkout from "./pages/Checkout";
+  import Navbar from "./components/Navbar";
+  import { useContext } from "react";
+  import { AuthContext } from "./context/AuthContext";
+  import "./App.css";
+  import AuthProvider from "./context/AuthContext";
+  import ProductDetails from "./pages/ProductDetails";
+  import CartProvider from "./context/CartContext";
+  import { Navigate } from "react-router-dom";
 
-function App() {
+  function App() {
+    const { user } = useContext(AuthContext);
+    return (
+          <div className="app">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+  
+              {/* Pass mode as a prop to each route */}
+              <Route path="/login" element={<Auth mode="login" />} />
+              <Route path="/signup" element={<Auth mode="signup" />} />
+              
+              <Route 
+                path="/checkout" 
+                element={user ? <Checkout /> : <Navigate to="/login" />} 
+              />
+              <Route path="/products/:id" element={<ProductDetails />} />
+            </Routes>
+          </div>
+    );
+  }
 
-  return (
-    <AuthProvider>
-    <div className='app'>
-      <Navbar />
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-      </Routes>
-    </div>
-    </AuthProvider>
-  );
-}
-
-export default App;
+  export default App;
