@@ -28,7 +28,6 @@ export default function Auth() {
       else{
         setError(result.message);
       }
-      console.log(result);
     }
 
   return (
@@ -36,7 +35,7 @@ export default function Auth() {
       <div className="container">
         <div className="auth-container">
           {/* IF USER EXISTS: Show the Logged In Card */}
-          
+
             <h1 className="page-title">{mode === 'signup' ? "Sign Up": "Login"}</h1>
               {error && <div className="error-message">{error}</div>}
             <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
@@ -44,8 +43,7 @@ export default function Auth() {
               <div className="form-group">
                 <label className="form-label" htmlFor="email">Email</label>
                 <input className="form-input" type="email" id="email" 
-                {...register("email", {required: "Email is required"})}>
-                </input>
+                {...register("email", {required: "Email is required"})}/>
                 {errors.email && <span className="form-error">{errors.email.message}</span>}
               </div>
               <div className="form-group">
@@ -54,7 +52,7 @@ export default function Auth() {
                   minLength:{value: 6, message: "Password must be at least 6 characters"},
                   maxLength:{value: 12, message: "Password cannot exceed 12 characters"}
                 })}
-                className="form-input" type="password" id="password"></input>
+                className="form-input" type="password" id="password"/>
                 {errors.password && <span className="form-error">{errors.password.message}</span>}
               </div>
               
