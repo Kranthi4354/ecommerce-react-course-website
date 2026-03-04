@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useContext } from "react";
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useProtectedAddToCart } from "../hooks/useProtectedAction";
 
 export default function ProductCard({ product }) {
   const { addToCart, cartItems } = useCart();
   const { user } = useContext(AuthContext);
+  const handleAddToCart = useProtectedAddToCart();
   const productInCart = cartItems.find((item) => item.id === product.id);
   const navigate = useNavigate();
 
@@ -15,14 +15,6 @@ export default function ProductCard({ product }) {
     ? `(${productInCart.quantity})`
     : "";
 
-    const handleAddToCart = () => {
-        if (!user) {
-            alert("Please login to add items to your cart!");
-            navigate("/login"); // Redirect them to login
-            return;
-        }
-        addToCart(product.id);
-    };
   return (
     <div className="product-card">
       <img
@@ -39,7 +31,7 @@ export default function ProductCard({ product }) {
           </Link>
           <button 
              className={`btn ${user ? 'btn-primary' : 'btn-disabled'}`} 
-                onClick={handleAddToCart}
+                onClick={() => handleAddToCart(product.id)}
                 >
              {user ? `Add to Cart ${productQuantityLabel}` : 'Login to Buy'}
             </button>
