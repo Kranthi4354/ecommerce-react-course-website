@@ -18,7 +18,7 @@ export default function ProductCard({ product }) {
     const handleAddToCart = () => {
         if (!user) {
             alert("Please login to add items to your cart!");
-            navigate("/auth"); // Redirect them to login
+            navigate("/login"); // Redirect them to login
             return;
         }
         addToCart(product.id);

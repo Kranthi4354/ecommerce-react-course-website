@@ -13,8 +13,12 @@ export default function Checkout() {
   const total = getCartTotal();
 
   function placeOrder() {
-    alert("Successful Order!");
-    clearCart();
+    if (cartItems.length === 0) {
+    alert("Your cart is empty! Please add items to your cart before placing an order.");
+    } else {
+      alert("Successful Order!");
+      clearCart();
+    }
   }
   return (
     <div className="page">
