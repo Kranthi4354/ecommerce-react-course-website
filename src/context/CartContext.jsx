@@ -1,23 +1,29 @@
 import { createContext, useState, useContext } from "react";
 import { getProductById } from "../data/products";
 
+
 const CartContext = createContext(null);
 
+
 export default function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([]); // {id: 2, quantity: 7}
+  const [cartItems, setCartItems] = useState([]);
+
 
   function addToCart(productId) {
-    const existing = cartItems.find((item) => item.id === productId);
+    // 1. Convert ID to Number to prevent "1" !== 1 mismatches
+    const idToFind = Number(productId);
+
+    const existing = cartItems.find((item) => item.id === idToFind);
+
     if (existing) {
-      const currentQuantity = existing.quantity;
       const updatedCartItems = cartItems.map((item) =>
-        item.id === productId
-          ? { id: productId, quantity: currentQuantity + 1 }
+        item.id === idToFind
+          ? { ...item, quantity: item.quantity + 1 }
           : item
       );
       setCartItems(updatedCartItems);
     } else {
-      setCartItems([...cartItems, { id: productId, quantity: 1 }]);
+      setCartItems([...cartItems, { id: idToFind, quantity: 1 }]);
     }
   }
 
@@ -31,27 +37,27 @@ export default function CartProvider({ children }) {
   }
 
   function removeFromCart(productId) {
-    setCartItems(cartItems.filter((item) => item.id !== productId));
+    setCartItems(cartItems.filter((item) => item.id !== Number(productId)));
   }
 
   function updateQuantity(productId, quantity) {
+    const idToUpdate = Number(productId);
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(idToUpdate);
       return;
     }
     setCartItems(
       cartItems.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
+        item.id === idToUpdate ? { ...item, quantity } : item
       )
     );
   }
 
   function getCartTotal() {
-    const total = cartItems.reduce((total, item) => {
+    return cartItems.reduce((total, item) => {
       const product = getProductById(item.id);
       return total + (product ? product.price * item.quantity : 0);
     }, 0);
-    return total;
   }
 
   function clearCart() {
@@ -76,7 +82,5 @@ export default function CartProvider({ children }) {
 }
 
 export function useCart() {
-  const context = useContext(CartContext);
-
-  return context;
+  return useContext(CartContext);
 }
